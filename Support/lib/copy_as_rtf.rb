@@ -60,12 +60,25 @@ class RtfExporter
     require "#{ENV['TM_SUPPORT_PATH']}/lib/osx/plist"
 
     # Load TM preferences to discover the current theme and font settings
-    textmate_pref_file = '~/Library/Preferences/com.macromates.textmate.plist'
-    prefs = OSX::PropertyList.load(File.open(File.expand_path(textmate_pref_file)))
-    theme_uuid = prefs['OakThemeManagerSelectedTheme']
+    
+    textmate_pref_files = [File.expand_path('~/Library/Preferences/com.macromates.textmate.plist'), File.expand_path('~/Library/Preferences/com.macromates.TextMate.preview.plist')]
+    textmate_pref_files_opened = nil
+    textmate_pref_files.each do |filePath|
+      break if File.file?(filePath) && textmate_pref_files_opened = File.open(filePath)
+    end
+    unless textmate_pref_files_opened
+      print "Preference file not found!"
+      abort
+    end
+    
+    prefs = OSX::PropertyList.load(textmate_pref_files_opened)
+    
+    # theme_uuid = prefs['themeUUID'] || prefs['OakThemeManagerSelectedTheme']
+    theme_uuid = "71D40D9D-AE48-11D9-920A-000D93589AF6"
+
     # Load the active theme. Unfortunately, this requires us to scan through
     # all discoverable theme files...
-    unless theme_plist = find_theme(theme_uuid)
+    unless theme_plist = load_theme_with_path(ENV['TM_CURRENT_THEME_PATH'])
       print "Could not locate your theme file or it may be corrupt or unparsable!"
       abort
     end
@@ -138,29 +151,8 @@ RTF_DOC
   # \\tab\\tab\\i \\cf3 Another line
   # }}
   
-  # Search heuristic is based on the Theme Builder bundle's
-  # "Create for Current Language" command
-  def find_theme(uuid)
-    theme_dirs = [
-      File.expand_path('~/Library/Application Support/TextMate/Themes'),
-      '/Library/Application Support/TextMate/Themes',
-      TextMate.app_path + '/Contents/SharedSupport/Themes'
-    ]
-
-    theme_dirs.each do |theme_dir|
-      if File.exists? theme_dir
-        themes = Dir.entries(theme_dir).find_all { |theme| theme =~ /.+\.(tmTheme|plist)$/ }
-        themes.each do |theme|
-          begin
-            plist = OSX::PropertyList.load(File.open("#{theme_dir}/#{theme}"))
-            return plist if plist["uuid"] == uuid
-          rescue OSX::PropertyListError => e
-            # puts "Error parsing theme #{theme_dir}/#{theme}" - e.g. GitHub.tmTheme has issues
-          end
-        end
-      end
-    end
-    return nil
+  def load_theme_with_path(path)
+    OSX::PropertyList.load(File.open(path))
   end
   
   def detab(str, width)
