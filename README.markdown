@@ -15,18 +15,16 @@ Installation
 
     mkdir -p ~/Library/Application\ Support/TextMate/Bundles
     cd ~/Library/Application\ Support/TextMate/Bundles
-    git clone git://github.com/drnic/copy-as-rtf-tmbundle.git "Copy as RTF.tmbundle"
-    
-Inside TextMate, click "Reload Bundles."
+    git clone git://github.com/aharpole/copy-as-rtf-tmbundle.git "Copy as RTF.tmbundle"
 
 Credit
 ======
 
-This bundle was created by [Max Muermann](http://www.workingwithrails.com/person/8530-max-muermann)
+The original version of this bundle was created by [Max Muermann](http://www.workingwithrails.com/person/8530-max-muermann)
 
-Its now hosted on github by [Dr Nic Williams](http://drnicwilliams.com) so it can live on.
+I have modified this version to work with TextMate 2.
 
 License
 =======
 
-Don't know. Ask Max.
+This is public domain. Thank you to Max for graciously making his original code public domain.
