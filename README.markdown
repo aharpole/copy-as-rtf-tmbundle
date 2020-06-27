@@ -13,8 +13,8 @@ paste it directly into Keynote presentations. And other places where RTF is supp
 Installation
 ============
 
-    mkdir -p ~/Library/Application\ Support/Avian/Bundles
-    cd ~/Library/Application\ Support/Avian/Bundles
+    mkdir -p ~/Library/Application\ Support/TextMate/Bundles
+    cd ~/Library/Application\ Support/TextMate/Bundles
     git clone git://github.com/aharpole/copy-as-rtf-tmbundle.git "Copy as RTF.tmbundle"
     
 Credit
